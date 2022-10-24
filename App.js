@@ -5,7 +5,7 @@ import HomeNavigator from "./app/navigator/HomeNavigator";
 export default function App() {
   return (
     <NavigationContainer>
-      <HomeNavigator />
+      <AuthNavigator />
     </NavigationContainer>
   );
 }

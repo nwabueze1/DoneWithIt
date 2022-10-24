@@ -12,7 +12,7 @@ const Stack = createNativeStackNavigator();
 const ListingNavigator = () => (
   <Stack.Navigator
     screenOptions={{
-      headerShown: true,
+      headerShown: false,
     }}
   >
     <Stack.Screen name={screens.listing} component={ListingsScreen} />

@@ -27,6 +27,18 @@ const listings = [
     price: 400,
     image: require("../assets/couch.jpg"),
   },
+  {
+    id: 3,
+    title: "Couch in great condition",
+    price: 400,
+    image: require("../assets/couch.jpg"),
+  },
+  {
+    id: 4,
+    title: "Red jacket for sale",
+    price: 100,
+    image: require("../assets/jacket.jpg"),
+  },
 ];
 export default function ListingsScreen({ navigator }) {
   // const [listings, setListings] = useState([]);
@@ -36,6 +48,7 @@ export default function ListingsScreen({ navigator }) {
   return (
     <AppScreen style={styles.screen}>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={listings}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
