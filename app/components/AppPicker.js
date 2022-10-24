@@ -17,14 +17,17 @@ export default function AppPicker({
   items = [],
   onValueChange,
   placeholder,
+  numberOfColumns = 1,
   value,
+  width = "100%",
+  PickerItemComponent = PickerItem,
 }) {
   const [visible, setVisible] = useState(false);
 
   return (
     <>
       <TouchableWithoutFeedback onPress={() => setVisible(true)}>
-        <View style={styles.container}>
+        <View style={[styles.container, { width: width }]}>
           {icon && (
             <MaterialCommunityIcons
               style={styles.icon}
@@ -33,9 +36,11 @@ export default function AppPicker({
               color={defaultStyles.colors.mediumGray}
             />
           )}
-          <AppText style={styles.text}>
-            {value ? value.label : placeholder}
-          </AppText>
+          {value ? (
+            <AppText style={styles.text}>{value.label}</AppText>
+          ) : (
+            <AppText style={styles.placeholder}>{placeholder}</AppText>
+          )}
 
           <MaterialCommunityIcons
             style={styles.icon}
@@ -49,9 +54,11 @@ export default function AppPicker({
         <Button title="close" onPress={() => setVisible(false)} />
         <FlatList
           data={items}
-          key={(item) => item.value.toString()}
+          keyExtractor={(item) => item.value.toString()}
+          numColumns={numberOfColumns}
           renderItem={({ item }) => (
-            <PickerItem
+            <PickerItemComponent
+              item={item}
               label={item.label}
               onPress={() => {
                 onValueChange(item);
@@ -70,7 +77,6 @@ const styles = StyleSheet.create({
     backgroundColor: defaultStyles.colors.lightGray,
     flexDirection: "row",
     borderRadius: 25,
-    width: "100%",
     padding: 15,
     marginVertical: 10,
     alignItems: "center",
@@ -81,5 +87,9 @@ const styles = StyleSheet.create({
   text: {
     flex: 1,
     ...defaultStyles.text,
+  },
+  placeholder: {
+    color: defaultStyles.colors.mediumGray,
+    flex: 1,
   },
 });

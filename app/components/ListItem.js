@@ -18,6 +18,7 @@ export default function ListItem({
   subTitle,
   onPress,
   renderRightActions,
+  EndIconComponent,
 }) {
   return (
     <GestureHandlerRootView>
@@ -28,22 +29,29 @@ export default function ListItem({
             {image && <Image source={image} style={styles.avatar} />}
             {/* {icon && <Icon} */}
             <View style={styles.textContainer}>
-              {title && <AppText style={styles.title}>{title}</AppText>}
+              {title && (
+                <AppText style={styles.title} numberOfLines={1}>
+                  {title}
+                </AppText>
+              )}
               {subTitle && (
-                <AppText style={styles.subTitle}>{subTitle}</AppText>
+                <AppText style={styles.subTitle} numberOfLines={2}>
+                  {subTitle}
+                </AppText>
               )}
             </View>
+            {EndIconComponent}
           </View>
         </TouchableHighlight>
       </Swipeable>
     </GestureHandlerRootView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     padding: 15,
+    alignItems: "center",
   },
   avatar: {
     height: 70,
@@ -52,11 +60,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "500",
+    fontSize: 21,
   },
   textContainer: {
     // marginHorizontal: 5,
     marginLeft: 10,
     justifyContent: "center",
+    flex: 1,
   },
   subTitle: {
     color: colors.mediumGray,

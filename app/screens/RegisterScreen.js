@@ -1,25 +1,33 @@
-import { StyleSheet, Image, Alert } from "react-native";
 import React from "react";
+import { View, StyleSheet, Image } from "react-native";
 import AppScreen from "../components/AppScreen";
-import * as Yup from "yup";
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
+import * as Yup from "yup";
 
-const Schema = Yup.object().shape({
+const schema = Yup.object().shape({
+  name: Yup.string().required(),
   email: Yup.string().required().email(),
   password: Yup.string().required(),
 });
-
-export default function LoginScreen() {
+export default function RegisterScreen() {
   return (
     <AppScreen style={styles.container}>
-      <Image style={styles.logo} source={require("../assets/logo-red.png")} />
+      <Image source={require("../assets/logo-red.png")} style={styles.image} />
       <AppForm
-        initialValues={{ email: "", password: "" }}
-        validationSchema={Schema}
-        onSubmit={(values) => {
-          Alert.alert(values.email, values.password);
+        validationSchema={schema}
+        onSubmit={(values) => {}}
+        initialValues={{
+          name: "",
+          email: "",
+          password: "",
         }}
       >
+        <AppFormField
+          icon="account"
+          name={"name"}
+          placeholder="Name"
+          autoCorrect={false}
+        />
         <AppFormField
           name={"email"}
           placeholder="Email"
@@ -38,7 +46,8 @@ export default function LoginScreen() {
           secureTextEntry
           textContentType="password"
         />
-        <SubmitButton title="Login" />
+
+        <SubmitButton title={"Register"} />
       </AppForm>
     </AppScreen>
   );
@@ -46,12 +55,12 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 10,
+    // justifyContent: "center",
+    alignItems: "center",
   },
-  logo: {
-    width: 80,
-    height: 80,
-    alignSelf: "center",
-    marginTop: 50,
-    marginBottom: 20,
+  image: {
+    height: 100,
+    width: 100,
+    marginTop: 30,
   },
 });

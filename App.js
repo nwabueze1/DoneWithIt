@@ -1,7 +1,11 @@
-import { useState } from "react";
-import { StyleSheet } from "react-native";
-import LoginScreen from "./app/screens/LoginScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import AuthNavigator from "./app/navigator/AuthNavigator";
+import HomeNavigator from "./app/navigator/HomeNavigator";
 
 export default function App() {
-  return <LoginScreen />;
+  return (
+    <NavigationContainer>
+      <HomeNavigator />
+    </NavigationContainer>
+  );
 }
