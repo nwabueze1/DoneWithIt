@@ -1,8 +1,13 @@
-import { StyleSheet, Image, Alert } from "react-native";
-import React from "react";
+import { StyleSheet, Image } from "react-native";
+import React, { useState } from "react";
 import AppScreen from "../components/AppScreen";
 import * as Yup from "yup";
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
+import { apiClient } from "../api/client";
+import { endPoints } from "../api/endPoints";
+import AppText from "../components/AppText";
+import { defaultStyles } from "../config/styles";
+import { useTokenAuth } from "../hooks/useTokenAuth";
 
 const Schema = Yup.object().shape({
   email: Yup.string().required().email(),
@@ -10,16 +15,36 @@ const Schema = Yup.object().shape({
 });
 
 export default function LoginScreen() {
+  const [state, setState] = useState({
+    loading: false,
+    hasError: false,
+  });
+  const { tokenReceived } = useTokenAuth();
+
+  const handleLogin = async (value) => {
+    setState({ ...state, loading: true });
+
+    const { data, problem } = await apiClient.post(endPoints.auth, value);
+    if (problem) {
+      return setState({ ...state, loading: false, hasError: true });
+    }
+    tokenReceived(data.access_token);
+
+    setState({ ...state, loading: false });
+  };
   return (
     <AppScreen style={styles.container}>
       <Image style={styles.logo} source={require("../assets/logo-red.png")} />
       <AppForm
         initialValues={{ email: "", password: "" }}
         validationSchema={Schema}
-        onSubmit={(values) => {
-          Alert.alert(values.email, values.password);
-        }}
+        onSubmit={handleLogin}
       >
+        {state.hasError && (
+          <AppText style={styles.errorMessage}>
+            Invalid email or password
+          </AppText>
+        )}
         <AppFormField
           name={"email"}
           placeholder="Email"
@@ -38,7 +63,10 @@ export default function LoginScreen() {
           secureTextEntry
           textContentType="password"
         />
-        <SubmitButton title="Login" />
+        <SubmitButton
+          title={state.loading ? "Loading..." : "Login"}
+          disabled={state.loading}
+        />
       </AppForm>
     </AppScreen>
   );
@@ -53,5 +81,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 50,
     marginBottom: 20,
+  },
+  errorMessage: {
+    color: defaultStyles.colors.primary,
+    textAlign: "center",
   },
 });
