@@ -8,6 +8,8 @@ import { endPoints } from "../api/endPoints";
 import AppText from "../components/AppText";
 import { defaultStyles } from "../config/styles";
 import { useTokenAuth } from "../hooks/useTokenAuth";
+import { useNavigation } from "@react-navigation/native";
+import { screens } from "../routes/Screens";
 
 const Schema = Yup.object().shape({
   email: Yup.string().required().email(),
@@ -20,6 +22,7 @@ export default function LoginScreen() {
     hasError: false,
   });
   const { tokenReceived } = useTokenAuth();
+  const navigator = useNavigation();
 
   const handleLogin = async (value) => {
     setState({ ...state, loading: true });
@@ -31,6 +34,7 @@ export default function LoginScreen() {
     tokenReceived(data.access_token);
 
     setState({ ...state, loading: false });
+    navigator.navigate("hom");
   };
   return (
     <AppScreen style={styles.container}>

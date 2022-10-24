@@ -28,22 +28,32 @@ export function useTokenAuth() {
       Number(decoded.iat) * 1000
     );
     if (diffInHours > 10) {
-      setToken("");
-      setUser(null);
+      deleteToken();
       return await removeItem();
     }
     setToken(storedToken);
     setUser(decoded);
   };
 
+  const deleteToken = () => {
+    setUser(null);
+    setToken("");
+  };
+
+  const logout = () => {
+    removeItem();
+    deleteToken();
+  };
+
   useEffect(() => {
     //check the async storage here and update the userInfo
     getStoredToken();
-  }, []);
+  }, [token]);
 
   return {
     token,
     user,
     tokenReceived,
+    logout,
   };
 }
