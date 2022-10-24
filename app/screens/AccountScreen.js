@@ -32,7 +32,6 @@ export default function AccountScreen() {
 
   const handleLogout = () => {
     logout();
-    navigator.navigate("hom");
   };
   return (
     <AppScreen style={styles.screen}>

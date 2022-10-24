@@ -4,7 +4,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ListingsEditScreen from "../screens/ListingsEditScreen";
 import AccountScreen from "../screens/AccountScreen";
 import { colors } from "../config/colors";
-import { LogoutNavigator } from "./LogoutNavigator";
 
 const { createBottomTabNavigator } = require("@react-navigation/bottom-tabs");
 
@@ -41,7 +40,7 @@ const HomeNavigator = () => {
       />
       <Tab.Screen
         name={screens.account}
-        component={LogoutNavigator}
+        component={AccountScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" color={color} size={size} />

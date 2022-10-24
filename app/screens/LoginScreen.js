@@ -34,7 +34,6 @@ export default function LoginScreen() {
     tokenReceived(data.access_token);
 
     setState({ ...state, loading: false });
-    navigator.navigate("hom");
   };
   return (
     <AppScreen style={styles.container}>

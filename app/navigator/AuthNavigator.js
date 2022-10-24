@@ -1,5 +1,3 @@
-import { LoginHomeNavigation } from "./LoginHome";
-
 const {
   createNativeStackNavigator,
 } = require("@react-navigation/native-stack");
@@ -19,7 +17,7 @@ const AuthNavigator = () => (
         headerShown: false,
       }}
     />
-    <Stack.Screen name={screens.login} component={LoginHomeNavigation} />
+    <Stack.Screen name={screens.login} component={LoginScreen} />
     <Stack.Screen name={screens.register} component={RegisterScreen} />
   </Stack.Navigator>
 );
