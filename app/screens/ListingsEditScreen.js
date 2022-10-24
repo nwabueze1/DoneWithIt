@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AppScreen from "../components/AppScreen";
 import * as Yup from "yup";
 import {
@@ -12,6 +12,7 @@ import CategoryPickerItem from "../components/CategoryPickerItem";
 import AppFormImagePicker from "../components/forms/AppFormImagePicker";
 import { useLocation } from "../hooks/useLocation";
 import { useApi } from "../hooks/useApi";
+import { endPoints } from "../api/endPoints";
 
 const schema = Yup.object().shape({
   title: Yup.string().required(),
@@ -78,14 +79,15 @@ const categories = [
   },
 ];
 export default function ListingsEditScreen() {
+  const [category, setCategory] = useState([]);
   const { location } = useLocation();
   const { get } = useApi();
 
   const loadCategories = async () => {
     try {
-      const { data, problem } = await get("/categories");
+      const { data, problem } = await get(endPoints.categories);
       if (problem) return console.log(problem);
-      console.log(data);
+      setCategory(data);
     } catch (error) {}
   };
   useEffect(() => {
@@ -116,7 +118,7 @@ export default function ListingsEditScreen() {
           width={120}
         />
         <AppFormPicker
-          items={categories}
+          items={category}
           name="category"
           placeholder={"Category"}
           width={"50%"}

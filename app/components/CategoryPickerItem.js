@@ -12,7 +12,7 @@ export default function CategoryPickerItem({ onPress, item }) {
           name={item.icon}
           size={60}
         />
-        <AppText style={styles.label}>{item.label}</AppText>
+        <AppText style={styles.label}>{item.name}</AppText>
       </View>
     </TouchableWithoutFeedback>
   );
