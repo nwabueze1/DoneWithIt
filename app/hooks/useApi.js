@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-export const useApi = (apiFunc) => {
-  const [data, setData] = useState([]);
+export const useApi = (apiFunc, noArray = false) => {
+  const [data, setData] = useState(() => (noArray ? null : []));
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 

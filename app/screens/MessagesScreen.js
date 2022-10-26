@@ -1,5 +1,5 @@
-import { StyleSheet, FlatList } from "react-native";
-import React, { useState } from "react";
+import { StyleSheet, FlatList, Text } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
 import ListItem from "../components/ListItem";
 import AppScreen from "../components/AppScreen";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -8,6 +8,13 @@ import Icon from "../components/Icon";
 import { defaultStyles } from "../config/styles";
 import { useNavigation } from "@react-navigation/native";
 import { screens } from "../routes/Screens";
+import { useApi } from "../hooks/useApi";
+import { getMessages } from "../api/messages";
+import { useTokenAuth } from "../hooks/useTokenAuth";
+import AppLoadingIndicator from "../components/AppLoadingIndicator";
+import AuthContext from "../context/AuthContext";
+import AppErrorMessage from "../components/AppErrorMessage";
+
 const initialMessage = [
   {
     id: 1,
@@ -26,24 +33,35 @@ const initialMessage = [
   },
 ];
 export default function MessagesScreen() {
-  const [messages, setMessages] = useState(initialMessage);
-  const [refreshing, setRefreshing] = useState(false);
+  const { user } = useContext(AuthContext);
+  const {
+    data: messages,
+    error,
+    loading,
+    request: loadMessages,
+  } = useApi(getMessages);
   const navigator = useNavigation();
 
-  const handleDelete = (messageId) => {
-    setMessages(messages.filter((c) => c.id !== messageId));
-  };
+  const handleDelete = (messageId) => {};
+
+  useEffect(() => {
+    loadMessages(user.id);
+  }, []);
+
+  if (loading) return <AppLoadingIndicator visible={loading} />;
+  if (error) return <AppErrorMessage onPress={() => loadMessages(user.id)} />;
+
   return (
     <AppScreen>
       <FlatList
         data={messages}
-        keyExtractor={(c) => c.id.toString()}
+        keyExtractor={(c) => c._id.toString()}
         renderItem={({ item }) => (
           <ListItem
-            onPress={() => navigator.navigate(screens.messageDetail)}
-            image={item.image}
-            title={item.title}
-            subTitle={item.description}
+            onPress={() => navigator.navigate(screens.messageDetail, item)}
+            image={require("../assets/fidelis.jpg")}
+            title={item.message}
+            // subTitle={item.description}
             renderRightActions={() => (
               <ListItemDeleteAction onPress={() => handleDelete(item.id)} />
             )}
@@ -58,18 +76,8 @@ export default function MessagesScreen() {
           />
         )}
         ItemSeparatorComponent={ListItemSeparator}
-        refreshing={refreshing}
-        onRefresh={() => {
-          //call the server to fetch new data
-          setMessages([
-            {
-              id: 2,
-              title: "T2",
-              description: "D2",
-              image: require("../assets/mosh.jpg"),
-            },
-          ]);
-        }}
+        refreshing={loading}
+        onRefresh={loadMessages}
       />
     </AppScreen>
   );

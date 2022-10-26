@@ -23,4 +23,7 @@ const addListing = (listing) => {
 
 const loadOneListing = (id) => apiClient.get(endPoints.listings + "/" + id);
 
-export { getListings, addListing, loadOneListing };
+const getListingByUser = (id) =>
+  apiClient.get(endPoints.geListingByUser + "/" + id);
+
+export { getListings, addListing, loadOneListing, getListingByUser };

@@ -16,7 +16,7 @@ const menuItems = [
       name: "format-list-bulleted",
       backgroundColor: colors.primary,
     },
-    // link: screens.mListing,
+    link: screens.myListings,
   },
   {
     title: "My Messages",
@@ -54,7 +54,7 @@ export default function AccountScreen() {
                   backgroundColor={item.icon.backgroundColor}
                 />
               }
-              onPress={() => navigator.navigate(screens.mMessage)}
+              onPress={() => navigator.navigate(item.link)}
             />
           )}
           ItemSeparatorComponent={ListItemSeparator}

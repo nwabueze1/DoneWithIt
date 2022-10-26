@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Image } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { View, StyleSheet, Image, Text, ScrollView } from "react-native";
 import AppScreen from "../components/AppScreen";
 import { colors } from "../config/colors";
 import { defaultStyles } from "../config/styles";
@@ -9,6 +9,15 @@ import AppReplyField from "../components/forms/AppReplyField";
 import { SubmitButton } from "../components/forms";
 import MessageButton from "../components/MessageButton";
 import AppText from "../components/AppText";
+import { useRoute } from "@react-navigation/native";
+import { useApi } from "../hooks/useApi";
+import { loadOneListing } from "../api/listings";
+import AppLoadingIndicator from "../components/AppLoadingIndicator";
+import ListItem from "../components/ListItem";
+import { addMessages } from "../api/messages";
+import AuthContext from "../context/AuthContext";
+import AppErrorMessage from "../components/AppErrorMessage";
+import { getUserInfo } from "../api/user";
 
 const initialValues = {
   message: "",
@@ -18,47 +27,89 @@ const schema = Yup.object().shape({
 });
 export default function MessageDetailsScreen() {
   const [openModal, setOpenModal] = useState(false);
+  const route = useRoute();
+  const { user } = useContext(AuthContext);
+  const { request: loadListing, data, loading } = useApi(loadOneListing);
+  const { error, request: addMessage } = useApi(addMessages);
+  const { data: senderInfo, request: getSenderInfo } = useApi(
+    getUserInfo,
+    true
+  );
+
   const details = {
     title: "Is this item still for sale",
     image: require("../assets/fidelis.jpg"),
     message:
       "Is this item still available, I just wanted to check if you still have it in stock, I would love to buy,Is this item still available, I just wanted to check if you still have it in stock, I would love to buy,Is this item still available, I just wanted to check if you still have it in stock, I would love to buy",
   };
+
+  const handleSendMessage = async (message, props) => {
+    await getSenderInfo(route.params.from);
+    // const token = senderInfo[1].pushNotificationToken;
+    const newMessage = {
+      ...message,
+      listingId: data.id,
+      from: route.params.to,
+      to: route.params.from,
+    };
+    addMessage(newMessage);
+    if (error) return;
+    props.resetForm();
+    //send push notification to the user
+    setOpenModal(false);
+  };
+  useEffect(() => {
+    loadListing(route.params.listingId);
+  }, []);
+
+  if (loading) return <AppLoadingIndicator visible={loading} />;
+  if (error) return <AppErrorMessage onPress={handleSendMessage} />;
   return (
     <AppScreen style={styles.screen}>
-      <View style={styles.container}>
-        <Image source={details.image} style={styles.avatar} />
-        <View style={styles.textContainer}>
-          <AppText style={styles.subTitle}>{details.message}</AppText>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <ListItem
+          style={styles.listItem}
+          // image={data.images[0]}
+          subTitle={data.price}
+          title={data.title}
+        />
+
+        <View style={styles.container}>
+          <Image source={details.image} style={styles.avatar} />
+          <View style={styles.textContainer}>
+            <AppText style={styles.subTitle}>{route.params.message}</AppText>
+          </View>
         </View>
-      </View>
-      {!openModal && (
-        <View>
-          {/* show the product here */}
-          <MessageButton
-            title="reply"
-            onPress={() => setOpenModal(!openModal)}
-          />
-        </View>
-      )}
-      {openModal && (
-        <View style={[styles.container, { marginTop: 10 }]}>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={schema}
-            onSubmit={(values, props) => {
-              //call the api and send a message
-            }}
-          >
-            {(props) => (
-              <View style={styles.form}>
-                <AppReplyField name={"message"} placeholder="Message *" />
-                <SubmitButton onPress={props.handleSubmit} title="send reply" />
-              </View>
-            )}
-          </Formik>
-        </View>
-      )}
+
+        {openModal ? (
+          <View style={[styles.container, { marginTop: 10 }]}>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={schema}
+              onSubmit={handleSendMessage}
+            >
+              {(props) => (
+                <View style={styles.form}>
+                  <AppReplyField name={"message"} placeholder="Message *" />
+                  <SubmitButton
+                    onPress={props.handleSubmit}
+                    title="send reply"
+                  />
+                </View>
+              )}
+            </Formik>
+          </View>
+        ) : (
+          <View>
+            {/* show the product here */}
+            {/* <AppCard subTitle={} /> */}
+            <MessageButton
+              title="reply"
+              onPress={() => setOpenModal(!openModal)}
+            />
+          </View>
+        )}
+      </ScrollView>
     </AppScreen>
   );
 }
@@ -99,5 +150,8 @@ const styles = StyleSheet.create({
   },
   form: {
     width: "100%",
+  },
+  listItem: {
+    backgroundColor: colors.white,
   },
 });

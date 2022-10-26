@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableHighlight,
-} from "react-native";
+import { View, StyleSheet, Image, TouchableHighlight } from "react-native";
 import React from "react";
 import AppText from "./AppText";
 import { colors } from "../config/colors";
@@ -19,12 +13,13 @@ export default function ListItem({
   onPress,
   renderRightActions,
   EndIconComponent,
+  style,
 }) {
   return (
     <GestureHandlerRootView>
       <Swipeable renderRightActions={renderRightActions}>
         <TouchableHighlight underlayColor={colors.white} onPress={onPress}>
-          <View style={styles.container}>
+          <View style={[styles.container, style]}>
             {IconComponent}
             {image && <Image source={image} style={styles.avatar} />}
             {/* {icon && <Icon} */}

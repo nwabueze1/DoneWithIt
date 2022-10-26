@@ -7,4 +7,5 @@ export const endPoints = {
   listings: "/listing",
   listingByCategory: "/listing/category",
   categories: "/categories",
+  geListingByUser: "/listing/user",
 };

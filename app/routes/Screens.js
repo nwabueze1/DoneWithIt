@@ -11,4 +11,5 @@ export const screens = {
   mListing: "mListing",
   mAccount: "mAccount",
   messageDetail: "message detail",
+  myListings: "my listings",
 };
