@@ -29,15 +29,11 @@ export default function RegisterScreen() {
     //create user
     const user = createUser({ ...values, pushNotificationToken: token });
 
-    const { problem } = await apiClient.post(endPoints.user, user);
-    //email is registered
-    if (problem) {
-      setLoading(false);
-      return setHasRegistered(true);
-    }
+    const { ok, data } = await apiClient.post(endPoints.user, user);
+    setLoading(false);
+    if (!ok) return setHasRegistered(true);
 
     navigation.navigate(screens.login);
-    setLoading(false);
   };
 
   return (

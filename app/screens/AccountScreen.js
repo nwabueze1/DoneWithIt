@@ -1,13 +1,11 @@
-import { View, Text, FlatList, StyleSheet } from "react-native";
-import React from "react";
+import { View, FlatList, StyleSheet } from "react-native";
+import React, { useContext } from "react";
 import AppScreen from "../components/AppScreen";
 import ListItem from "../components/ListItem";
 import { colors } from "../config/colors";
 import Icon from "../components/Icon";
 import ListItemSeparator from "../components/ListItemSeparator";
-import { useNavigation } from "@react-navigation/native";
-import { screens } from "../routes/Screens";
-import { useTokenAuth } from "../hooks/useTokenAuth";
+import AuthContext from "../context/AuthContext";
 
 const menuItems = [
   {
@@ -27,11 +25,11 @@ const menuItems = [
 ];
 
 export default function AccountScreen() {
-  const navigator = useNavigation();
-  const { logout } = useTokenAuth();
+  const { setUser, logout } = useContext(AuthContext);
 
   const handleLogout = () => {
     logout();
+    setUser(null);
   };
   return (
     <AppScreen style={styles.screen}>

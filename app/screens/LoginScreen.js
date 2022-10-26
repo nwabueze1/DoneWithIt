@@ -1,5 +1,5 @@
 import { StyleSheet, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import AppScreen from "../components/AppScreen";
 import * as Yup from "yup";
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
@@ -10,6 +10,7 @@ import { defaultStyles } from "../config/styles";
 import { useTokenAuth } from "../hooks/useTokenAuth";
 import { useNavigation } from "@react-navigation/native";
 import { screens } from "../routes/Screens";
+import AuthContext from "../context/AuthContext";
 
 const Schema = Yup.object().shape({
   email: Yup.string().required().email(),
@@ -21,8 +22,8 @@ export default function LoginScreen() {
     loading: false,
     hasError: false,
   });
-  const { tokenReceived } = useTokenAuth();
-  const navigator = useNavigation();
+
+  const { tokenReceived } = useContext(AuthContext);
 
   const handleLogin = async (value) => {
     setState({ ...state, loading: true });

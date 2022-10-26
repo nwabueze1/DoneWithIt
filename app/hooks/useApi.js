@@ -1,12 +1,24 @@
-import { apiClient } from "../api/client";
+import { useState } from "react";
 
-export const useApi = () => {
-  const client = apiClient;
+export const useApi = (apiFunc) => {
+  const [data, setData] = useState([]);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const request = async (...args) => {
+    setLoading(true);
+    const { ok, data: apiData } = await apiFunc(...args);
+    setLoading(false);
+
+    if (!ok) setError(true);
+
+    setData(apiData);
+  };
+
   return {
-    get: client.get,
-    post: client.post,
-    put: client.put,
-    delete: client.delete,
-    patch: client.patch,
+    request,
+    data,
+    error,
+    loading,
   };
 };

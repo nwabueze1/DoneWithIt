@@ -1,5 +1,5 @@
-import { Image, StyleSheet, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
 import AppScreen from "../components/AppScreen";
 import * as Yup from "yup";
 import {
@@ -12,7 +12,13 @@ import CategoryPickerItem from "../components/CategoryPickerItem";
 import AppFormImagePicker from "../components/forms/AppFormImagePicker";
 import { useLocation } from "../hooks/useLocation";
 import { useApi } from "../hooks/useApi";
-import { endPoints } from "../api/endPoints";
+import AuthContext from "../context/AuthContext";
+import { addListing } from "../api/listings";
+import categoryApi from "../api/category";
+import AppText from "../components/AppText";
+import { defaultStyles } from "../config/styles";
+import { useNavigation } from "@react-navigation/native";
+import { screens } from "../routes/Screens";
 
 const schema = Yup.object().shape({
   title: Yup.string().required(),
@@ -22,73 +28,25 @@ const schema = Yup.object().shape({
   images: Yup.array().min(1, "Please select at least one image"),
 });
 
-const categories = [
-  {
-    backgroundColor: "#fc5c65",
-    icon: "floor-lamp",
-    label: "Furniture",
-    value: 1,
-  },
-  {
-    backgroundColor: "#fd9644",
-    icon: "car",
-    label: "Cars",
-    value: 2,
-  },
-  {
-    backgroundColor: "#fed330",
-    icon: "camera",
-    label: "Cameras",
-    value: 3,
-  },
-  {
-    backgroundColor: "#26de81",
-    icon: "cards",
-    label: "Games",
-    value: 4,
-  },
-  {
-    backgroundColor: "#2bcbba",
-    icon: "shoe-heel",
-    label: "Clothing",
-    value: 5,
-  },
-  {
-    backgroundColor: "#45aaf2",
-    icon: "basketball",
-    label: "Sports",
-    value: 6,
-  },
-  {
-    backgroundColor: "#4b7bec",
-    icon: "headphones",
-    label: "Movies & Music",
-    value: 7,
-  },
-  {
-    backgroundColor: "#a55eea",
-    icon: "book-open-variant",
-    label: "Books",
-    value: 8,
-  },
-  {
-    backgroundColor: "#778ca3",
-    icon: "application",
-    label: "Other",
-    value: 9,
-  },
-];
 export default function ListingsEditScreen() {
-  const [category, setCategory] = useState([]);
+  const { user } = useContext(AuthContext);
   const { location } = useLocation();
-  const { get } = useApi();
+  const { request: loadCategories, data: category } = useApi(
+    categoryApi.loadCategories
+  );
+  const [error, setError] = useState(null);
+  const navigation = useNavigation();
 
-  const loadCategories = async () => {
-    try {
-      const { data, problem } = await get(endPoints.categories);
-      if (problem) return console.log(problem);
-      setCategory(data);
-    } catch (error) {}
+  const handleSubmit = async (listing) => {
+    setError(null);
+    const result = await addListing({
+      ...listing,
+      location: location,
+      userId: user.id,
+    });
+    if (!result.ok)
+      return setError(result.originalError.response.data.message[0]);
+    navigation.navigate(screens.listing);
   };
   useEffect(() => {
     loadCategories();
@@ -106,8 +64,9 @@ export default function ListingsEditScreen() {
           images: [],
         }}
         validationSchema={schema}
-        onSubmit={(values) => {}}
+        onSubmit={(values) => handleSubmit(values)}
       >
+        {error && <AppText style={styles.errorText}>{error}</AppText>}
         <AppFormImagePicker name={"images"} />
         <AppFormField maxLength={255} name={"title"} placeholder="Title" />
         <AppFormField
@@ -148,5 +107,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 50,
     marginBottom: 20,
+  },
+  errorText: {
+    color: defaultStyles.colors.primary,
   },
 });
