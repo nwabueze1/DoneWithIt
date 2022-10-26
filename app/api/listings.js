@@ -17,9 +17,9 @@ const addListing = (listing) => {
     userId: listing.userId,
     location: listing.location,
     images: [
-      "https://picsum.photos/600/300",
-      "https://picsum.photos/600/300",
-      "https://picsum.photos/600/300",
+      "https://picsum.photos/600/300?date=" + new Date().toLocaleString(),
+      "https://picsum.photos/600/300?date=" + new Date().toLocaleString(),
+      "https://picsum.photos/600/300?date=" + new Date().toLocaleString(),
     ],
   };
 

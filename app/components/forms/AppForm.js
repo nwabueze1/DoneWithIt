@@ -12,7 +12,10 @@ export default function AppForm({
     <Formik
       validationSchema={validationSchema}
       initialValues={initialValues}
-      onSubmit={onSubmit}
+      onSubmit={(values, props) => {
+        onSubmit(values);
+        props.resetForm();
+      }}
     >
       {() => <>{children}</>}
     </Formik>

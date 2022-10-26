@@ -6,7 +6,7 @@ import AppText from "./AppText";
 export default function AppCard({ title, subTitle, image }) {
   return (
     <View style={styles.card}>
-      <Image source={image} style={styles.image} />
+      <Image source={{ uri: image }} style={styles.image} />
       <View style={styles.textContainer}>
         <AppText numberOfLines={1}>{title}</AppText>
         <AppText style={styles.subTitle} numberOfLines={2}>
