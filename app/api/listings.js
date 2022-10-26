@@ -3,11 +3,6 @@ import { endPoints } from "./endPoints";
 
 const getListings = () => apiClient.get(endPoints.listings);
 
-// title: "",
-// description: "",
-// category: "",
-// price: "",
-// images: [],
 const addListing = (listing) => {
   const apiListing = {
     title: listing.title,
@@ -26,4 +21,6 @@ const addListing = (listing) => {
   return apiClient.post(endPoints.listings, apiListing);
 };
 
-export { getListings, addListing };
+const loadOneListing = (id) => apiClient.get(endPoints.listings + "/" + id);
+
+export { getListings, addListing, loadOneListing };

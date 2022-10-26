@@ -1,23 +1,35 @@
 import { View, StyleSheet, Image } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import AppText from "../components/AppText";
 import { colors } from "../config/colors";
 import ListItem from "../components/ListItem";
 import { useRoute } from "@react-navigation/native";
+import { useApi } from "../hooks/useApi";
+import { loadOneListing } from "../api/listings";
+import AppLoadingIndicator from "../components/AppLoadingIndicator";
 
 export default function ListingDetailsScreen() {
+  const { data: listing, request, loading } = useApi(loadOneListing);
   const route = useRoute();
-  return (
+
+  useEffect(() => {
+    request(route.params._id);
+  }, []);
+  return loading ? (
+    <AppLoadingIndicator visible={loading} />
+  ) : (
     <View>
-      <Image style={styles.image} source={{ uri: route.params.images[1] }} />
+      {listing?.images && (
+        <Image style={styles.image} source={{ uri: listing?.images[1] }} />
+      )}
       <View style={styles.detailsContainer}>
-        <AppText style={styles.title}>{route.params.title}</AppText>
-        <AppText style={styles.price}>{route.params.price}</AppText>
+        <AppText style={styles.title}>{listing?.title}</AppText>
+        <AppText style={styles.price}>NGN {listing?.price}</AppText>
         <View style={styles.listItemContainer}>
           <ListItem
-            image={require("../assets/mosh.jpg")}
-            subTitle="5 listings"
-            title={"Mosh Hamedani"}
+            image={require("../assets/fidelis.jpg")}
+            subTitle={listing?.user?.numberOfListings + " listings"}
+            title={listing?.user?.name}
           />
         </View>
       </View>

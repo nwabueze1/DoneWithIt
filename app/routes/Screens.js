@@ -7,4 +7,8 @@ export const screens = {
   welcome: "welcome",
   login: "Login",
   register: "Register",
+  mMessage: "mMessage",
+  mListing: "mListing",
+  mAccount: "mAccount",
+  messageDetail: "message detail",
 };

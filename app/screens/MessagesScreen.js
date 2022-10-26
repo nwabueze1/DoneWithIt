@@ -6,6 +6,8 @@ import ListItemSeparator from "../components/ListItemSeparator";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import Icon from "../components/Icon";
 import { defaultStyles } from "../config/styles";
+import { useNavigation } from "@react-navigation/native";
+import { screens } from "../routes/Screens";
 const initialMessage = [
   {
     id: 1,
@@ -26,6 +28,7 @@ const initialMessage = [
 export default function MessagesScreen() {
   const [messages, setMessages] = useState(initialMessage);
   const [refreshing, setRefreshing] = useState(false);
+  const navigator = useNavigation();
 
   const handleDelete = (messageId) => {
     setMessages(messages.filter((c) => c.id !== messageId));
@@ -37,7 +40,7 @@ export default function MessagesScreen() {
         keyExtractor={(c) => c.id.toString()}
         renderItem={({ item }) => (
           <ListItem
-            onPress={() => {}}
+            onPress={() => navigator.navigate(screens.messageDetail)}
             image={item.image}
             title={item.title}
             subTitle={item.description}

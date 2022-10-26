@@ -6,6 +6,8 @@ import { colors } from "../config/colors";
 import Icon from "../components/Icon";
 import ListItemSeparator from "../components/ListItemSeparator";
 import AuthContext from "../context/AuthContext";
+import { screens } from "../routes/Screens";
+import { useNavigation } from "@react-navigation/native";
 
 const menuItems = [
   {
@@ -14,6 +16,7 @@ const menuItems = [
       name: "format-list-bulleted",
       backgroundColor: colors.primary,
     },
+    // link: screens.mListing,
   },
   {
     title: "My Messages",
@@ -21,23 +24,21 @@ const menuItems = [
       name: "email",
       backgroundColor: colors.secondary,
     },
+    link: screens.mMessage,
   },
 ];
 
 export default function AccountScreen() {
-  const { setUser, logout } = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
+  const navigator = useNavigation();
 
-  const handleLogout = () => {
-    logout();
-    setUser(null);
-  };
   return (
     <AppScreen style={styles.screen}>
       <View style={styles.container}>
         <ListItem
-          image={require("../assets/mosh.jpg")}
-          title={"Okeke Fidelis"}
-          subTitle="padrefidelis111@gmail.com"
+          image={require("../assets/fidelis.jpg")}
+          title={user?.name}
+          subTitle={user?.email}
         />
       </View>
       <View style={styles.container}>
@@ -53,6 +54,7 @@ export default function AccountScreen() {
                   backgroundColor={item.icon.backgroundColor}
                 />
               }
+              onPress={() => navigator.navigate(screens.mMessage)}
             />
           )}
           ItemSeparatorComponent={ListItemSeparator}
@@ -60,7 +62,7 @@ export default function AccountScreen() {
       </View>
       <View style={styles.container}>
         <ListItem
-          onPress={handleLogout}
+          onPress={logOut}
           title={"Logout"}
           IconComponent={<Icon name={"logout"} backgroundColor="#ffe66d" />}
         />
@@ -71,7 +73,7 @@ export default function AccountScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 20,
+    marginBottom: 20,
     backgroundColor: colors.white,
   },
   screen: {

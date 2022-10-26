@@ -2,8 +2,8 @@ import { screens } from "../routes/Screens";
 import ListingNavigator from "./ListingNavigator";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ListingsEditScreen from "../screens/ListingsEditScreen";
-import AccountScreen from "../screens/AccountScreen";
 import { colors } from "../config/colors";
+import MessageNavigator from "./MessageNavigator";
 
 const { createBottomTabNavigator } = require("@react-navigation/bottom-tabs");
 
@@ -40,12 +40,13 @@ const HomeNavigator = () => {
       />
       <Tab.Screen
         name={screens.account}
-        component={AccountScreen}
+        component={MessageNavigator}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" color={color} size={size} />
           ),
           tabBarLabel: "Account",
+          headerShown: false,
         }}
       />
     </Tab.Navigator>

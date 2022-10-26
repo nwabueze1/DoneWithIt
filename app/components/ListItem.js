@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "500",
     fontSize: 21,
+    color: colors.darkGray,
   },
   textContainer: {
     // marginHorizontal: 5,

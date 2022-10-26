@@ -7,9 +7,6 @@ import { apiClient } from "../api/client";
 import { endPoints } from "../api/endPoints";
 import AppText from "../components/AppText";
 import { defaultStyles } from "../config/styles";
-import { useTokenAuth } from "../hooks/useTokenAuth";
-import { useNavigation } from "@react-navigation/native";
-import { screens } from "../routes/Screens";
 import AuthContext from "../context/AuthContext";
 
 const Schema = Yup.object().shape({
@@ -22,8 +19,7 @@ export default function LoginScreen() {
     loading: false,
     hasError: false,
   });
-
-  const { tokenReceived } = useContext(AuthContext);
+  const { tokenReceived, changeLogState } = useContext(AuthContext);
 
   const handleLogin = async (value) => {
     setState({ ...state, loading: true });
@@ -33,6 +29,7 @@ export default function LoginScreen() {
       return setState({ ...state, loading: false, hasError: true });
     }
     tokenReceived(data.access_token);
+    changeLogState();
 
     setState({ ...state, loading: false });
   };
