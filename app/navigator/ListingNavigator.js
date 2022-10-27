@@ -10,12 +10,12 @@ const { default: ListingsScreen } = require("../screens/ListingsScreen");
 const Stack = createNativeStackNavigator();
 
 const ListingNavigator = () => (
-  <Stack.Navigator
-  // screenOptions={{
-  //   headerShown: false,
-  // }}
-  >
-    <Stack.Screen name={screens.listing} component={ListingsScreen} />
+  <Stack.Navigator>
+    <Stack.Screen
+      name={screens.listing}
+      component={ListingsScreen}
+      options={{ headerShown: false }}
+    />
     <Stack.Screen
       name={screens.listingDetails}
       component={ListingDetailsScreen}

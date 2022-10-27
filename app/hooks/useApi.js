@@ -10,9 +10,13 @@ export const useApi = (apiFunc, noArray = false) => {
     const { ok, data: apiData } = await apiFunc(...args);
     setLoading(false);
 
-    if (!ok) setError(true);
+    if (!ok) {
+      // console.log("failed");
+      return setError(true);
+    }
 
     setData(apiData);
+    setError(false);
   };
 
   return {

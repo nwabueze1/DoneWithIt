@@ -10,6 +10,7 @@ import { screens } from "../routes/Screens";
 import AppText from "../components/AppText";
 import { defaultStyles } from "../config/styles";
 import { useApi } from "../hooks/useApi";
+import AppLoadingIndicator from "../components/AppLoadingIndicator";
 
 const schema = Yup.object().shape({
   name: Yup.string().required(),

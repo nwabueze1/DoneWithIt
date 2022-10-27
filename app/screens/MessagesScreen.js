@@ -1,4 +1,4 @@
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, View } from "react-native";
 import React, { useContext, useEffect } from "react";
 import ListItem from "../components/ListItem";
 import AppScreen from "../components/AppScreen";
@@ -51,7 +51,7 @@ export default function MessagesScreen() {
   if (error) return <AppErrorMessage onPress={() => loadMessages(user.id)} />;
 
   return (
-    <AppScreen>
+    <View>
       <FlatList
         data={messages}
         keyExtractor={(c) => c._id.toString()}
@@ -78,7 +78,7 @@ export default function MessagesScreen() {
         refreshing={loading}
         onRefresh={loadMessages}
       />
-    </AppScreen>
+    </View>
   );
 }
 

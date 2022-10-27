@@ -6,8 +6,8 @@ import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 import AppText from "../components/AppText";
 import { defaultStyles } from "../config/styles";
 import AuthContext from "../context/AuthContext";
-import { useApi } from "../hooks/useApi";
-import { authLogin } from "../api/authentification";
+import { apiClient } from "../api/client";
+import { endPoints } from "../api/endPoints";
 
 const Schema = Yup.object().shape({
   email: Yup.string().required().email(),
@@ -20,11 +20,12 @@ export default function LoginScreen() {
     hasError: false,
   });
   const { tokenReceived, changeLogState } = useContext(AuthContext);
-  const { data, error, loading, request: login } = useApi(authLogin, true);
 
   const handleLogin = async (value) => {
-    await login(value);
     setState({ ...state, loading: true });
+    const { ok, data } = await apiClient.post(endPoints.auth, value);
+    setState({ ...state, loading: false });
+    if (!ok) return setState({ ...state, hasError: true });
     tokenReceived(data.access_token);
     changeLogState();
   };
@@ -37,7 +38,7 @@ export default function LoginScreen() {
           validationSchema={Schema}
           onSubmit={handleLogin}
         >
-          {error && (
+          {state.hasError && (
             <AppText style={styles.errorMessage}>
               Invalid email or password
             </AppText>
@@ -61,8 +62,8 @@ export default function LoginScreen() {
             textContentType="password"
           />
           <SubmitButton
-            title={loading ? "Loading..." : "Login"}
-            disabled={loading}
+            title={state.loading ? "Loading..." : "Login"}
+            disabled={state.loading}
           />
         </AppForm>
       </ScrollView>

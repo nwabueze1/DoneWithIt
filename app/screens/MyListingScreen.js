@@ -1,9 +1,8 @@
 import React, { useContext, useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { getListingByUser } from "../api/listings";
 import AppLoadingIndicator from "../components/AppLoadingIndicator";
-import AppScreen from "../components/AppScreen";
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import { defaultStyles } from "../config/styles";
@@ -19,7 +18,7 @@ export default function MyListingScreen() {
 
   if (loading) return <AppLoadingIndicator visible={loading} />;
   return (
-    <AppScreen style={styles.container}>
+    <View style={styles.container}>
       <FlatList
         data={data}
         keyExtractor={(c) => c._id.toString()}
@@ -32,12 +31,12 @@ export default function MyListingScreen() {
         )}
         ItemSeparatorComponent={ListItemSeparator}
       />
-    </AppScreen>
+    </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: defaultStyles.colors.lightGray,
+    // backgroundColor: defaultStyles.colors.lightGray,
   },
   listContainer: {
     backgroundColor: defaultStyles.colors.white,

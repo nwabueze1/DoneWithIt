@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ListingsEditScreen from "../screens/ListingsEditScreen";
 import { colors } from "../config/colors";
 import MessageNavigator from "./MessageNavigator";
+import AppTabBarButton from "./AppTabBarButton";
 
 const { createBottomTabNavigator } = require("@react-navigation/bottom-tabs");
 
@@ -30,13 +31,22 @@ const HomeNavigator = () => {
       <Tab.Screen
         name={screens.listingEdit}
         component={ListingsEditScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="plus" color={color} size={size} />
+        options={({ navigation }) => ({
+          // tabBarIcon: ({ color, size }) => (
+          //   <MaterialCommunityIcons
+          //     name="plus-circle"
+          //     color={color}
+          //     size={size}
+          //   />
+          // ),
+          tabBarButton: () => (
+            <AppTabBarButton
+              onPress={() => navigation.navigate(screens.listingEdit)}
+            />
           ),
           tabBarLabel: "Add Listing",
           headerShown: true,
-        }}
+        })}
       />
       <Tab.Screen
         name={screens.account}

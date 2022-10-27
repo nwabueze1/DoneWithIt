@@ -8,18 +8,22 @@ import { useNavigation } from "@react-navigation/native";
 import AppLoadingIndicator from "../components/AppLoadingIndicator";
 import { useApi } from "../hooks/useApi";
 import { getListings } from "../api/listings";
+import AppErrorMessage from "../components/AppErrorMessage";
 
 export default function ListingsScreen() {
   const {
     data: listings,
     loading,
     request: loadListings,
+    error,
   } = useApi(getListings);
   const navigation = useNavigation();
 
   useEffect(() => {
     loadListings();
-  }, []);
+  }, [listings.length]);
+
+  if (error) return <AppErrorMessage onPress={() => loadListings()} />;
   return (
     <AppScreen style={styles.screen}>
       {loading ? (
@@ -53,5 +57,6 @@ const styles = StyleSheet.create({
   screen: {
     padding: 20,
     backgroundColor: colors.lightGray,
+    paddingBottom: 0,
   },
 });

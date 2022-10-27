@@ -3,7 +3,7 @@ import { endPoints } from "./endPoints";
 
 const getListings = () => apiClient.get(endPoints.listings);
 
-const addListing = (listing) => {
+const addListing = (listing, onUploadProgress) => {
   const apiListing = {
     title: listing.title,
     description: listing.description,
@@ -18,7 +18,10 @@ const addListing = (listing) => {
     ],
   };
 
-  return apiClient.post(endPoints.listings, apiListing);
+  return apiClient.post(endPoints.listings, apiListing, {
+    onUploadProgress: (progress) =>
+      onUploadProgress(progress.loaded / progress.total),
+  });
 };
 
 const loadOneListing = (id) => apiClient.get(endPoints.listings + "/" + id);
