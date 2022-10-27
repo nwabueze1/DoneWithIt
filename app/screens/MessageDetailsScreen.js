@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, StyleSheet, Image, Text, ScrollView } from "react-native";
+import { View, StyleSheet, Image, ScrollView } from "react-native";
 import AppScreen from "../components/AppScreen";
 import { colors } from "../config/colors";
 import { defaultStyles } from "../config/styles";
@@ -18,6 +18,7 @@ import { addMessages } from "../api/messages";
 import AuthContext from "../context/AuthContext";
 import AppErrorMessage from "../components/AppErrorMessage";
 import { getUserInfo } from "../api/user";
+import { sendNotification } from "../hooks/useRecieveNotification";
 
 const initialValues = {
   message: "",
@@ -28,23 +29,12 @@ const schema = Yup.object().shape({
 export default function MessageDetailsScreen() {
   const [openModal, setOpenModal] = useState(false);
   const route = useRoute();
-  const { user } = useContext(AuthContext);
   const { request: loadListing, data, loading } = useApi(loadOneListing);
   const { error, request: addMessage } = useApi(addMessages);
-  const { data: senderInfo, request: getSenderInfo } = useApi(
-    getUserInfo,
-    true
-  );
-
-  const details = {
-    title: "Is this item still for sale",
-    image: require("../assets/fidelis.jpg"),
-    message:
-      "Is this item still available, I just wanted to check if you still have it in stock, I would love to buy,Is this item still available, I just wanted to check if you still have it in stock, I would love to buy,Is this item still available, I just wanted to check if you still have it in stock, I would love to buy",
-  };
+  const { request: getSenderInfo, data: sender } = useApi(getUserInfo, true);
+  const { user } = useContext(AuthContext);
 
   const handleSendMessage = async (message, props) => {
-    await getSenderInfo(route.params.from);
     // const token = senderInfo[1].pushNotificationToken;
     const newMessage = {
       ...message,
@@ -56,14 +46,22 @@ export default function MessageDetailsScreen() {
     if (error) return;
     props.resetForm();
     //send push notification to the user
+    sendNotification({
+      to: sender.pushNotificationToken,
+      body: newMessage.message,
+      title: "Message from " + user.name,
+    });
     setOpenModal(false);
   };
+
   useEffect(() => {
     loadListing(route.params.listingId);
+    getSenderInfo(route.params.from);
   }, []);
 
   if (loading) return <AppLoadingIndicator visible={loading} />;
   if (error) return <AppErrorMessage onPress={handleSendMessage} />;
+
   return (
     <AppScreen style={styles.screen}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -75,7 +73,10 @@ export default function MessageDetailsScreen() {
         />
 
         <View style={styles.container}>
-          <Image source={details.image} style={styles.avatar} />
+          <Image
+            source={require("../assets/fidelis.jpg")}
+            style={styles.avatar}
+          />
           <View style={styles.textContainer}>
             <AppText style={styles.subTitle}>{route.params.message}</AppText>
           </View>
@@ -101,8 +102,6 @@ export default function MessageDetailsScreen() {
           </View>
         ) : (
           <View>
-            {/* show the product here */}
-            {/* <AppCard subTitle={} /> */}
             <MessageButton
               title="reply"
               onPress={() => setOpenModal(!openModal)}

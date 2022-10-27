@@ -1,5 +1,6 @@
 const { apiClient } = require("./client");
+const { endPoints } = require("./endPoints");
 
-const login = async (data) => {
-  const {} = await apiClient.post();
-};
+const authLogin = (data) => apiClient.post(endPoints.auth, data);
+
+export { authLogin };

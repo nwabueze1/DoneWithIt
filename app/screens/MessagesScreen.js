@@ -1,5 +1,5 @@
-import { StyleSheet, FlatList, Text } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import { StyleSheet, FlatList } from "react-native";
+import React, { useContext, useEffect } from "react";
 import ListItem from "../components/ListItem";
 import AppScreen from "../components/AppScreen";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -10,7 +10,6 @@ import { useNavigation } from "@react-navigation/native";
 import { screens } from "../routes/Screens";
 import { useApi } from "../hooks/useApi";
 import { getMessages } from "../api/messages";
-import { useTokenAuth } from "../hooks/useTokenAuth";
 import AppLoadingIndicator from "../components/AppLoadingIndicator";
 import AuthContext from "../context/AuthContext";
 import AppErrorMessage from "../components/AppErrorMessage";

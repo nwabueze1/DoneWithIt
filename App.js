@@ -17,8 +17,8 @@ export default function App() {
   };
 
   const logOut = () => {
-    logout();
     setIsLoggedIn(false);
+    logout();
     setUser(null);
   };
   useEffect(() => {
