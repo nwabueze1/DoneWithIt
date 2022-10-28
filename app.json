@@ -7,14 +7,15 @@
     "icon": "./app/assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./app/assets/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#e63c4b"
+      "image": "./app/assets/wind.png",
+      "resizeMode": "cover"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -22,12 +23,27 @@
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.nwabueze.donewithit"
     },
     "web": {
       "favicon": "./app/assets/favicon.png"
     },
-    "plugins": ["sentry-expo"],
+    "plugins": [
+      "sentry-expo",
+      "expo-notifications",
+      [
+        "expo-notifications",
+        {
+          "icon": "./local/assets/notification-icon.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./local/assets/notification-sound.wav",
+            "./local/assets/notification-sound-other.wav"
+          ]
+        }
+      ]
+    ],
     "hooks": {
       "postPublish": [
         {
